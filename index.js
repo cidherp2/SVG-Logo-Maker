@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
-const {Rectangle,Circle} = require ('./lib/shapes');
+const {Rectangle,Circle,Triangle} = require ('./lib/shapes');
 const fs = require('fs');
+const { Z_ASCII } = require('zlib');
 
 
 const init = () =>{
@@ -43,6 +44,13 @@ inquirer
             message:'Define the width of your rectangle logo',
             when:(answers) => answers.shape === "rectangle"
         },
+
+        {
+            type:'text',
+            name:'radius',
+            message:'Define the radius of your circular logo',
+            when:(answers) => answers.shape === "circle"
+        },
         
     ])
     .then((data) =>{
@@ -62,16 +70,31 @@ inquirer
             break;
 
             case 'circle':
-                console.log('Creating circular logo ')
+                console.log('Creating circular logo ');
             const circ = new Circle (data.fill,data.text,data.textColor,data.radius);
-            fs.writeFile('./examples/logo.svg',circ.renderCircle(),(err)=>{
+            console.log('circ holis ');
+            fs.writeFile('./examples/logo.svg', circ.renderCircle(),(err) =>{
+                console.log('alavega')
                 if(err){
                     console.log(err);
                 }
                 else{
                     console.log('Your circular logo is ready')
                 }
-            } )
+            });
+            break;
+
+            case 'triangle':
+                console.log('creatin triangular logo');
+                const tri = new Triangle (data.fill,data.text,data.textColor);
+                fs.writeFile('./examples/logo.svg',tri.renderTriangle(),(err)=>{
+                    if(err){
+                        console.log(err);
+                    }
+                    else{
+                        console.log('Your triangular logo is done');
+                    }
+                });
         }
     });
 
